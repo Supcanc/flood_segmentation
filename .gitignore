@@ -1,5 +1,9 @@
-# venv
+# Virtual environment
 flood_segmentation/
 
-# dataset
+# Dataset
 dataset/
+
+# Folder for images to test
+test_images/
+test_predictions/
