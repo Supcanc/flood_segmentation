@@ -4,6 +4,6 @@ flood_segmentation/
 # Dataset
 dataset/
 
-# Folder for images to test
+# Folders for images to test and predictions
 test_images/
 test_predictions/
