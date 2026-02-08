@@ -20,7 +20,7 @@ classes_info = pd.DataFrame({
 model = smp.Unet(
     encoder_name='vgg19',
     encoder_weights=None,
-    in_channels=1,
+    in_channels=3,
     classes=len(classes_info)
 )
 model.load_state_dict(torch.load('models/best_params.pt', weights_only=True))
