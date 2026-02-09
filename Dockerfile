@@ -4,7 +4,6 @@ WORKDIR /app
 
 COPY requirements.txt .
 
-RUN pip3 install torch==2.10.0 --index-url https://download.pytorch.org/whl/cu130
 RUN pip install -r requirements.txt
 
 COPY api/app.py .
