@@ -2,7 +2,8 @@ from fastapi import FastAPI
 import pandas as pd
 import segmentation_models_pytorch as smp
 import torch
-import albumentations as A
+from torchvision.transforms import v2
+from torchvision.transforms import InterpolationMode
 import cv2
 import os
 from PIL import Image
@@ -28,10 +29,12 @@ model.eval()
 
 IMAGE_SIZE = (448, 448)
 
-transforms = A.Compose([
-    A.Resize(*IMAGE_SIZE, interpolation=cv2.INTER_NEAREST),
-    A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
-    A.ToTensorV2()
+transforms = v2.Compose([
+    v2.ToImage(),
+    v2.ToDtype(torch.uint8, scale=True),
+    v2.Resize(IMAGE_SIZE, interpolation=InterpolationMode.NEAREST),
+    v2.ToDtype(torch.float32, scale=True),
+    v2.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))
 ])
 
 device = torch.accelerator.current_accelerator() if torch.accelerator.is_available() else 'cpu'
@@ -44,16 +47,14 @@ def predict(images_path: str, predictions_path: str):
         image = Image.open(image_path).convert('RGB')
         origin_image_height = image.height
         origin_image_width = image.width
-        image_np = np.array(image)
-        transformed_image = transforms(image=image_np)['image']
-        output = model(transformed_image.to(device)).squeeze()
+        transformed_image = transforms(image)
+        output = model(transformed_image.to(device).unsqueeze(0)).squeeze()
         mask = output.argmax(dim=0)
-        resize = A.Resize(
-            origin_image_height,
-            origin_image_width,
+        resize = v2.Resize(
+            (origin_image_height, origin_image_width),
             interpolation=cv2.INTER_NEAREST
         )
-        origin_size_mask = resize(mask)
+        origin_size_mask = resize(mask.unsqueeze(0)).squeeze()
         colored_mask = index_to_color(origin_size_mask)
         mask_name = image_name.split('.')[0] + '.png'
         plt.imsave(os.path.join(predictions_path, mask_name), colored_mask)
