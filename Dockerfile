@@ -5,6 +5,7 @@ WORKDIR /app
 COPY requirements.txt .
 
 RUN pip install -r requirements.txt
+RUN pip3 install torch==2.10.0 --index-url https://download.pytorch.org/whl/cu130
 
 COPY api/app.py .
 COPY models/best_params.pt .
