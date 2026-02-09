@@ -1,12 +1,13 @@
 FROM python:3.12.3-slim
 
-WORKDIR /app
+WORKDIR /flood_segmentation
 
 COPY requirements.txt .
 
 RUN pip install -r requirements.txt
 
-COPY api/app.py .
+COPY api/app.py ./api/
+COPY api/__init__.py ./api/
 COPY models/best_params.pt .
 
 EXPOSE 8000
