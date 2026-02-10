@@ -9,6 +9,7 @@ RUN pip install -r requirements.txt
 COPY api/app.py ./api/
 COPY api/__init__.py ./api/
 COPY models/best_params.pt ./models/
+COPY test_images/. ./test_images/
 
 EXPOSE 8000
 
