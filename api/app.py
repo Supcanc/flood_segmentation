@@ -40,7 +40,9 @@ device = torch.accelerator.current_accelerator() if torch.accelerator.is_availab
 model.to(device)
 
 @app.get('/predict')
-def predict(images_path: str, predictions_path: str):
+def predict(images_path: str):
+    predictions_path = 'predictions/'
+
     for image_name in os.listdir(images_path):
         image_path = os.path.join(images_path, image_name)
         image = Image.open(image_path).convert('RGB')
