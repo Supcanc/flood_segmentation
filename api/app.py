@@ -49,24 +49,27 @@ def predict():
     images_path = 'test_images/'
     predictions_path = 'test_predictions/'
 
-    for image_name in os.listdir(images_path):
-        image_path = os.path.join(images_path, image_name)
-        image = Image.open(image_path).convert('RGB')
-        origin_image_height = image.height
-        origin_image_width = image.width
-        transformed_image = transforms(image)
-        output = model(transformed_image.to(device).unsqueeze(0)).squeeze()
-        mask = output.argmax(dim=0)
-        resize = v2.Resize(
-            (origin_image_height, origin_image_width),
-            interpolation=cv2.INTER_NEAREST
-        )
-        origin_size_mask = resize(mask.unsqueeze(0)).squeeze()
-        colored_mask = index_to_color(origin_size_mask)
-        mask_name = image_name.split('.')[0] + '.png'
-        plt.imsave(os.path.join(predictions_path, mask_name), colored_mask)
+    try:
+        for image_name in os.listdir(images_path):
+            image_path = os.path.join(images_path, image_name)
+            image = Image.open(image_path).convert('RGB')
+            origin_image_height = image.height
+            origin_image_width = image.width
+            transformed_image = transforms(image)
+            output = model(transformed_image.to(device).unsqueeze(0)).squeeze()
+            mask = output.argmax(dim=0)
+            resize = v2.Resize(
+                (origin_image_height, origin_image_width),
+                interpolation=InterpolationMode.NEAREST
+            )
+            origin_size_mask = resize(mask.unsqueeze(0)).squeeze()
+            colored_mask = index_to_color(origin_size_mask)
+            mask_name = image_name.split('.')[0] + '.png'
+            plt.imsave(os.path.join(predictions_path, mask_name), colored_mask)
 
-    return {'status': 'ok'}
+        return {'status': 'ok'}
+    except Exception as e:
+        return {'status': str(e)}
 
 def index_to_color(mask):
     mask_colors = []
