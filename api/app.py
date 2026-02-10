@@ -66,6 +66,8 @@ def predict():
         mask_name = image_name.split('.')[0] + '.png'
         plt.imsave(os.path.join(predictions_path, mask_name), colored_mask)
 
+    return {'status': 'ok'}
+
 def index_to_color(mask):
     mask_colors = []
 
