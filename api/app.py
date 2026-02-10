@@ -23,7 +23,15 @@ model = smp.Unet(
     in_channels=3,
     classes=len(classes_info)
 )
-model.load_state_dict(torch.load('models/best_params.pt', weights_only=True))
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model.load_state_dict(
+    torch.load(
+        'models/best_params.pt',
+        map_location=device,
+        weights_only=True
+    )
+)
+model.to(device)
 model.eval()
 
 IMAGE_SIZE = (448, 448)
@@ -35,9 +43,6 @@ transforms = v2.Compose([
     v2.ToDtype(torch.float32, scale=True),
     v2.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))
 ])
-
-device = torch.accelerator.current_accelerator() if torch.accelerator.is_available() else 'cpu'
-model.to(device)
 
 @app.get('/predict')
 def predict():
