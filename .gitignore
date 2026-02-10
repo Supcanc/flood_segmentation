@@ -4,9 +4,5 @@ flood_segmentation/
 # Dataset
 dataset/
 
-# Folders for images to test and predictions
-test_images/
-test_predictions/
-
 # Cache
 api/__pycache__/
