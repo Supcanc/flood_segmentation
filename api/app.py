@@ -42,7 +42,7 @@ model.to(device)
 @app.get('/predict')
 def predict():
     images_path = 'test_images/'
-    predictions_path = 'predictions/'
+    predictions_path = 'test_predictions/'
 
     for image_name in os.listdir(images_path):
         image_path = os.path.join(images_path, image_name)
