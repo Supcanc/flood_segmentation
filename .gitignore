@@ -6,3 +6,6 @@ dataset/
 
 # Cache
 api/__pycache__/
+
+# Test predictions
+test_predictions/
