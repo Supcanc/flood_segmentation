@@ -40,7 +40,8 @@ device = torch.accelerator.current_accelerator() if torch.accelerator.is_availab
 model.to(device)
 
 @app.get('/predict')
-def predict(images_path: str):
+def predict():
+    images_path = 'test_images/'
     predictions_path = 'predictions/'
 
     for image_name in os.listdir(images_path):
